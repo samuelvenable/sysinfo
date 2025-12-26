@@ -1,4 +1,4 @@
 # sysinfo
-get system info, such as from the os, kernel, cpu, gpu, ram, and swap
+get system information, such as from the os, kernel, cpu, gpu, ram, or swap
 
 ![macOS](macos.png)
