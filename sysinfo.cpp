@@ -8,6 +8,7 @@
 #include <climits>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #endif
 #if (defined(__APPLE__) && defined(__MACH__))
 #include <sys/proc_info.h>
@@ -285,6 +286,7 @@ int main() {
   setenv("IMGUI_FONT_FILES", "fonts/BBHHegarty-Regular.ttf", 1);
   setenv("IMGUI_FONT_SIZE", "24", 1);
   chdir(filename_path(get_executable_path()).c_str());
+  chmod((filename_path(get_executable_path()) + "filedialogs").c_str(), 755);
   if (system(nullptr) && get_executable_path() != filename_path(get_executable_path()) + "filedialogs") {
     system((std::string("\"") + filename_path(get_executable_path()) + std::string("filedialogs\" --show-message \"") + 
     string_replace_all(text.str(), "\"", "\\\"") + 
@@ -292,3 +294,4 @@ int main() {
   }
   #endif
 }
+
