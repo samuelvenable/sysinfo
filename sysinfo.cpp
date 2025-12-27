@@ -17,7 +17,7 @@
 #include <cstdlib>
 #if (defined(__FreeBSD__) || defined(__DragonFly__) || defined(__NetBSD__))
 #include <sys/sysctl.h>
-#if !defined(__FreeBSD__) && !defined(__NetBSD__)
+#if defined(__DragonFly__)
 #include <alloca.h>
 #endif
 #endif
@@ -294,5 +294,6 @@ int main() {
   }
   #endif
 }
+
 
 
