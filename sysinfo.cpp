@@ -63,7 +63,7 @@ static std::string get_executable_path() {
   mib[2] = KERN_PROC_PATHNAME;
   mib[3] = -1;
   if (sysctl(mib, 4, nullptr, &len, nullptr, 0) == 0) {
-    string strbuff;
+    std::string strbuff;
     strbuff.resize(len, '\0');
     char *exe = strbuff.data();
     if (sysctl(mib, 4, exe, &len, nullptr, 0) == 0) {
@@ -81,7 +81,7 @@ static std::string get_executable_path() {
   mib[2] = -1;
   mib[3] = KERN_PROC_PATHNAME;
   if (sysctl(mib, 4, nullptr, &len, nullptr, 0) == 0) {
-    string strbuff;
+    std::string strbuff;
     strbuff.resize(len, '\0');
     char *exe = strbuff.data();
     if (sysctl(mib, 4, exe, &len, nullptr, 0) == 0) {
@@ -128,7 +128,7 @@ static std::string get_executable_path() {
   };
   auto cppstr_getenv = [](std::string name) {
     const char *cresult = getenv(name.c_str());
-    std::string result = cresult ? cresult : "";
+    std::string result = cresult ? cresult : ")";
     return result;
   };
   int cntp = 0;
@@ -245,25 +245,25 @@ static std::string string_replace_all(std::string str, std::string substr, std::
 }
 
 int main() {
-  std::stringstream text; text << 
-  "OS DEVICE NAME: " << os_device_name() << "\n" <<
-  "OS PRODUCT NAME: " << os_product_name() << "\n" <<
-  "OS KERNEL NAME: " << os_kernel_name() << "\n" <<
-  "OS KERNEL RELEASE: " << os_kernel_release() << "\n" <<
-  "OS ARCHITECTURE: " << os_architecture() << "\n" <<
-  "CPU PROCESSOR: " << cpu_processor() << "\n" <<
-  "CPU VENDOR: " << cpu_vendor() << "\n" <<
-  "CPU CORE COUNT: " << cpu_core_count() << "\n" <<
-  "CPU PROCESSOR COUNT: " << cpu_processor_count() << "\n" <<
-  "RANDOM-ACCESS MEMORY TOTAL: " << memory_totalram(true) << "\n" <<
-  "RANDOM-ACCESS MEMORY USED: " << memory_usedram(true) << "\n" <<
-  "RANDOM-ACCESS MEMORY FREE: " << memory_freeram(true) << "\n" <<
-  "SWAP MEMORY TOTAL: " << memory_totalswap(true) << "\n" <<
-  "SWAP MEMORY USED: " << memory_usedswap(true) << "\n" <<
-  "SWAP MEMORY FREE: " << memory_freeswap(true) << "\n" <<
-  "GPU MANUFACTURER: " << gpu_manufacturer() << "\n" <<
-  "GPU RENDERER: " << gpu_renderer() << "\n" <<
-  "GPU MEMORY: " << memory_totalvram(true);
+  std::string text =
+  ((os_device_name() != std::string("(null)")) ? (std::string("OS DEVICE NAME: ") + os_device_name() + std::string("\n")) : "") +
+  ((os_product_name() != std::string("(null)")) ? (std::string("OS PRODUCT NAME: ") + os_product_name() + std::string("\n")) : "") +
+  ((os_kernel_name() != std::string("(null)")) ? (std::string("OS KERNEL NAME: ") + os_kernel_name() + std::string("\n")) : "") +
+  ((os_kernel_release() != std::string("(null)")) ? (std::string("OS KERNEL RELEASE: ") + os_kernel_release() + std::string("\n")) : "") +
+  ((os_architecture() != std::string("(null)")) ? (std::string("OS ARCHITECTURE: ") + os_architecture() + std::string("\n")) : "") +
+  ((cpu_processor() != std::string("(null)")) ? (std::string("CPU PROCESSOR: ") + cpu_processor() + std::string("\n")) : "") +
+  ((cpu_vendor() != std::string("(null)")) ? (std::string("CPU VENDOR: ") + cpu_vendor() + std::string("\n")) : "") +
+  ((cpu_core_count() != std::string("(null)")) ? (std::string("CPU CORE COUNT: ") + cpu_core_count() + std::string("\n")) : "") +
+  ((cpu_processor_count() != std::string("(null)")) ? (std::string("CPU PROCESSOR COUNT: ") + cpu_processor_count() + std::string("\n")) : "") +
+  ((memory_totalram(true) != std::string("(null)")) ? (std::string("RANDOM-ACCESS MEMORY TOTAL: ") + memory_totalram(true) + std::string("\n")) : "") +
+  ((memory_usedram(true) != std::string("(null)")) ? (std::string("RANDOM-ACCESS MEMORY USED: ") + memory_usedram(true) + std::string("\n")) : "") +
+  ((memory_freeram(true) != std::string("(null)")) ? (std::string("RANDOM-ACCESS MEMORY FREE: ") + memory_freeram(true) + std::string("\n")) : "") +
+  ((memory_totalswap(true) != std::string("(null)")) ? (std::string("SWAP MEMORY TOTAL: ") + memory_totalswap(true) + std::string("\n")) : "") +
+  ((memory_usedswap(true) != std::string("(null)")) ? (std::string("SWAP MEMORY USED: ") + memory_usedswap(true) + std::string("\n")) : "") +
+  ((memory_freeswap(true) != std::string("(null)")) ? (std::string("SWAP MEMORY FREE: ") + memory_freeswap(true) + std::string("\n")) : "") +
+  ((gpu_manufacturer() != std::string("(null)")) ? (std::string("GPU MANUFACTURER: ") + gpu_manufacturer() + std::string("\n")) : "") +
+  ((gpu_renderer() != std::string("(null)")) ? (std::string("GPU RENDERER: ") + gpu_renderer() + std::string("\n")) : "") +
+  ((memory_totalvram(true) != std::string("(null)")) ? (std::string("GPU MEMORY: ") + memory_totalvram(true) + std::string("\n")) : "");
   #if defined(_WIN32)
   auto widen = [](std::string str) {
     if (str.empty()) return L"";
@@ -278,7 +278,7 @@ int main() {
   SetEnvironmentVariableW(L"IMGUI_FONT_SIZE", L"24");
   if (system(nullptr) && get_executable_path() != filename_path(get_executable_path()) + "filedialogs.exe") {
     system((std::string("\"") + filename_path(get_executable_path()) + std::string("filedialogs.exe\" --show-message \"") + 
-    string_replace_all(text.str(), "\"", "\\\"") + 
+    string_replace_all(text, "\"", "\\\"") + 
     std::string("\" > NUL")).c_str());
   }
   #else
@@ -289,7 +289,7 @@ int main() {
   chmod((filename_path(get_executable_path()) + "filedialogs").c_str(), 755);
   if (system(nullptr) && get_executable_path() != filename_path(get_executable_path()) + "filedialogs") {
     system((std::string("\"") + filename_path(get_executable_path()) + std::string("filedialogs\" --show-message \"") + 
-    string_replace_all(text.str(), "\"", "\\\"") + 
+    string_replace_all(text, "\"", "\\\"") + 
     std::string("\" > /dev/null")).c_str());
   }
   #endif
