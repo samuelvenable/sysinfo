@@ -6,24 +6,12 @@ add_library(libsysinfo SHARED IMPORTED)
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
   set(CMAKE_WIN32_EXECUTABLE OFF)
   set_target_properties(sysinfo PROPERTIES LINK_FLAGS "/SUBSYSTEM:CONSOLE")
-  set_target_properties(libsysinfo PROPERTIES
-    IMPORTED_LOCATION "./libsysinfo.dll"
-  )
+  set_target_properties(libsysinfo PROPERTIES IMPORTED_LOCATION "./libsysinfo.dll")
 elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-  add_custom_command(
-    TARGET sysinfo POST_BUILD
-    COMMAND ${CMAKE_INSTALL_NAME_TOOL} -change
-      "libsysinfo.dylib"
-      "@executable_path/libsysinfo.dylib"
-      $<TARGET_FILE:sysinfo>
-  )
-  set_target_properties(libsysinfo PROPERTIES
-    IMPORTED_LOCATION "libsysinfo.dylib"
-  )
+  set_target_properties(libsysinfo PROPERTIES IMPORTED_LOCATION "./libsysinfo.dylib")
+  add_custom_command(TARGET sysinfo POST_BUILD COMMAND ${CMAKE_INSTALL_NAME_TOOL} -change "./libsysinfo.dylib" "@executable_path/libsysinfo.dylib" $<TARGET_FILE:sysinfo>)
 else()
-  set_target_properties(libsysinfo PROPERTIES
-    IMPORTED_LOCATION "./libsysinfo.so"
-  )
+  set_target_properties(libsysinfo PROPERTIES IMPORTED_LOCATION "./libsysinfo.so")
 endif()
 if(CMAKE_SYSTEM_NAME MATCHES "OpenBSD")
   target_link_libraries(sysinfo PRIVATE libsysinfo kvm)
