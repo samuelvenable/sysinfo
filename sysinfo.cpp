@@ -128,7 +128,7 @@ static std::string get_executable_path() {
   };
   auto cppstr_getenv = [](std::string name) {
     const char *cresult = getenv(name.c_str());
-    std::string result = cresult ? cresult : ")";
+    std::string result = cresult ? cresult : "";
     return result;
   };
   int cntp = 0;
