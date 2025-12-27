@@ -7,7 +7,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
   set(CMAKE_WIN32_EXECUTABLE OFF)
   set_target_properties(sysinfo PROPERTIES LINK_FLAGS "/SUBSYSTEM:CONSOLE")
   set_target_properties(libsysinfo PROPERTIES
-    IMPORTED_LOCATION "libsysinfo.dll"
+    IMPORTED_LOCATION "./libsysinfo.dll"
   )
 elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
   add_custom_command(
@@ -22,7 +22,7 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
   )
 else()
   set_target_properties(libsysinfo PROPERTIES
-    IMPORTED_LOCATION "libsysinfo.so"
+    IMPORTED_LOCATION "./libsysinfo.so"
   )
 endif()
 if(CMAKE_SYSTEM_NAME MATCHES "OpenBSD")
